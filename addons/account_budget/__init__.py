@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import account_budget
+import model
 import report
 import wizard
 

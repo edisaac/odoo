@@ -261,10 +261,10 @@
 <template id="products_categories" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Categories">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <ul class="nav nav-pills nav-stacked mt16">
-          <li t-att-class=" '' if category else 'active' "><a t-att-href="keep('/shop',category=0)">All Products</a></li>
           <t t-foreach="categories" t-as="c">
               <t t-call="website_sale.categories_recursive"/>
           </t>
+          <li t-att-class=" '' if category else 'active' "><a t-att-href="keep('/shop',category=0)">All Products</a></li>
       </ul>
   </xpath>
   <xpath expr="//div[@id='products_grid_before']" position="attributes">
@@ -1212,10 +1212,6 @@
 <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
     <xpath expr="//footer" position="inside">
         <div class="container mt16 mb8">
-            <div class="pull-right" t-ignore="true" t-if="not editable">
-                Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
-                the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source eCommerce</a>.
-            </div>
             <div class="pull-left text-muted">
                 Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
             </div>

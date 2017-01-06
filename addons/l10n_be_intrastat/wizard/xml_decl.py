@@ -342,10 +342,8 @@ class xml_decl(osv.TransientModel):
 
         numlgn = 0
         for linekey in entries:
-            amounts = entries[linekey]
-            if round(amounts[0], 0) == 0:
-                continue
             numlgn += 1
+            amounts = entries[linekey]
             item = ET.SubElement(datas, 'Item')
             self._set_Dim(item, 'EXSEQCODE', unicode(numlgn))
             self._set_Dim(item, 'EXTRF', unicode(linekey.EXTRF))

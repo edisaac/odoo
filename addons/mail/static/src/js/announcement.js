@@ -49,7 +49,7 @@ openerp_announcement = function(instance) {
                     }, 400)
                 });
 
-                $('head').append($css);
+                //$('head').append($css);
             }).fail(function(result, ev){
                 ev.preventDefault();
             });

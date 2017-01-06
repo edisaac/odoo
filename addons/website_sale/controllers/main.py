@@ -145,8 +145,7 @@ class website_sale(http.Controller):
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
-        # id is added to be sure that order is a unique sort key
-        return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
+        return 'website_published desc,%s' % post.get('order', 'website_sequence desc')
 
     def _get_search_domain(self, search, category, attrib_values):
         domain = request.website.sale_product_domain()
@@ -228,7 +227,7 @@ class website_sale(http.Controller):
         attributes_ids = attributes_obj.search(cr, uid, [], context=context)
         attributes = attributes_obj.browse(cr, uid, attributes_ids, context=context)
 
-        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'lst_price', context)
         to_currency = pricelist.currency_id
         compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
 
@@ -276,7 +275,7 @@ class website_sale(http.Controller):
 
         pricelist = self.get_pricelist()
 
-        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'lst_price', context)
         to_currency = pricelist.currency_id
         compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
 
@@ -319,12 +318,12 @@ class website_sale(http.Controller):
         request.website.sale_get_order(code=promo, context=context)
         return request.redirect("/shop/cart")
 
-    @http.route(['/shop/cart'], type='http', auth="public", website=True)
+    @http.route(['/shop/cart'], type='http', auth="user", website=True)
     def cart(self, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order()
         if order:
-            from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+            from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'lst_price', context)
             to_currency = order.pricelist_id.currency_id
             compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
         else:
@@ -624,7 +623,7 @@ class website_sale(http.Controller):
 
         order_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
-    @http.route(['/shop/checkout'], type='http', auth="public", website=True)
+    @http.route(['/shop/checkout'], type='http', auth="user", website=True)
     def checkout(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
@@ -668,7 +667,7 @@ class website_sale(http.Controller):
     # Payment
     #------------------------------------------------------
 
-    @http.route(['/shop/payment'], type='http', auth="public", website=True)
+    @http.route(['/shop/payment'], type='http', auth="user", website=True)
     def payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
@@ -869,7 +868,7 @@ class website_sale(http.Controller):
 
         return request.redirect('/shop/confirmation')
 
-    @http.route(['/shop/confirmation'], type='http', auth="public", website=True)
+    @http.route(['/shop/confirmation'], type='http', auth="user", website=True)
     def payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
         the status of a sale.order. State at this point :

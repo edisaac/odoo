@@ -757,15 +757,14 @@ class account_voucher(osv.osv):
                     move_lines_found.append(line.id)
                     break
                 #otherwise we will split the voucher amount on each line (by most old first)
-                total_credit += line.credit and line.amount_residual or 0.0
-                total_debit += line.debit and line.amount_residual or 0.0
+                total_credit += line.credit or 0.0
+                total_debit += line.debit or 0.0
             elif currency_id == line.currency_id.id:
                 if line.amount_residual_currency == price:
                     move_lines_found.append(line.id)
                     break
-                line_residual = currency_pool.compute(cr, uid, company_currency, currency_id, abs(line.amount_residual), context=context_multi_currency)
-                total_credit += line.credit and line_residual or 0.0
-                total_debit += line.debit and line_residual or 0.0
+                total_credit += line.credit and line.amount_currency or 0.0
+                total_debit += line.debit and line.amount_currency or 0.0
 
         remaining_amount = price
         #voucher line creation
@@ -1050,7 +1049,7 @@ class account_voucher(osv.osv):
                 'move_id': move_id,
                 'journal_id': voucher.journal_id.id,
                 'period_id': voucher.period_id.id,
-                'partner_id': voucher.partner_id.id,
+                'partner_id': voucher.partner_id.parent_id and voucher.partner_id.parent_id.id or voucher.partner_id.id,
                 'currency_id': company_currency <> current_currency and  current_currency or False,
                 'amount_currency': (sign * abs(voucher.amount) # amount < 0 for refunds
                     if company_currency != current_currency else 0.0),
@@ -1229,7 +1228,7 @@ class account_voucher(osv.osv):
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
-                'partner_id': voucher.partner_id.id,
+                'partner_id': voucher.partner_id.parent_id and voucher.partner_id.parent_id.id or voucher.partner_id.id,
                 'currency_id': line.move_line_id and (company_currency <> line.move_line_id.currency_id.id and line.move_line_id.currency_id.id) or False,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'quantity': 1,
@@ -1346,7 +1345,7 @@ class account_voucher(osv.osv):
                 'name': write_off_name or name,
                 'account_id': account_id,
                 'move_id': move_id,
-                'partner_id': voucher.partner_id.id,
+                'partner_id': voucher.partner_id.parent_id and voucher.partner_id.parent_id.id or voucher.partner_id.id,
                 'date': voucher.date,
                 'credit': diff > 0 and diff or 0.0,
                 'debit': diff < 0 and -diff or 0.0,

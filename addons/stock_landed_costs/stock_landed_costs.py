@@ -40,11 +40,17 @@ class stock_landed_cost(osv.osv):
     }
 
     def _total_amount(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
+        currency_obj = self.pool.get('res.currency')
         result = {}
+        local_context = context.copy()
         for cost in self.browse(cr, uid, ids, context=context):
             total = 0.0
+            local_context['date'] = cost.date
             for line in cost.cost_lines:
-                total += line.price_unit
+                price_unit = currency_obj.compute(cr, uid, line.currency_id.id, cost.company_id.currency_id.id, line.price_unit, context=local_context)
+                total += price_unit
             result[cost.id] = total
         return result
 
@@ -77,7 +83,7 @@ class stock_landed_cost(osv.osv):
         return lines
 
     _columns = {
-        'name': fields.char('Name', track_visibility='always', readonly=True, copy=False),
+        'name': fields.char('Name', track_visibility='always', required=True, readonly=True, states={'draft':[('readonly',False)]}, copy=False),
         'date': fields.date('Date', required=True, states={'done': [('readonly', True)]}, track_visibility='onchange', copy=False),
         'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'done': [('readonly', True)]}, copy=False),
         'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'done': [('readonly', True)]}, copy=True),
@@ -92,12 +98,15 @@ class stock_landed_cost(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('done', 'Posted'), ('cancel', 'Cancelled')], 'State', readonly=True, track_visibility='onchange', copy=False),
         'account_move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, copy=False),
         'account_journal_id': fields.many2one('account.journal', 'Account Journal', required=True, states={'done': [('readonly', True)]}),
+        'company_id': fields.many2one('res.company', "Company", required=True, states={'done': [('readonly', True)]}),
+        'currency_id': fields.related('company_id','currency_id', type='many2one', relation="res.currency", string="Currency", readonly=True),
     }
 
     _defaults = {
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'stock.landed.cost'),
+        'name': "/",
         'state': 'draft',
         'date': fields.date.context_today,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
     def _create_accounting_entries(self, cr, uid, line, move_id, qty_out, context=None):
@@ -200,6 +209,9 @@ class stock_landed_cost(osv.osv):
         Will check if each cost line its valuation lines sum to the correct amount
         and if the overall total amount is correct also
         """
+        if context is None:
+            context = {}
+        currency_obj = self.pool.get('res.currency')
         costcor = {}
         tot = 0
         for valuation_line in landed_cost.valuation_adjustment_lines:
@@ -210,10 +222,13 @@ class stock_landed_cost(osv.osv):
             tot += valuation_line.additional_landed_cost
 
         prec = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
+        local_context = context.copy()
         # float_compare returns 0 for equal amounts
         res = not bool(float_compare(tot, landed_cost.amount_total, precision_digits=prec))
         for costl in costcor.keys():
-            if float_compare(costcor[costl], costl.price_unit, precision_digits=prec):
+            local_context['date'] = landed_cost.date
+            price_unit = currency_obj.compute(cr, uid, costl.currency_id.id, landed_cost.company_id.currency_id.id, costl.price_unit, context=local_context)
+            if float_compare(costcor[costl], price_unit, precision_digits=prec):
                 res = False
         return res
 
@@ -283,12 +298,19 @@ class stock_landed_cost(osv.osv):
                             'but you could create negative landed costs to reverse them'))
         return cost.write({'state': 'cancel'})
 
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('name','/') == '/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.landed.cost')
+        return super(stock_landed_cost, self).create(cr, uid, vals, context=context)
+    
     def unlink(self, cr, uid, ids, context=None):
         # cancel or raise first
         self.button_cancel(cr, uid, ids, context)
         return super(stock_landed_cost, self).unlink(cr, uid, ids, context=context)
 
     def compute_landed_cost(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         line_obj = self.pool.get('stock.valuation.adjustment.lines')
         unlink_ids = line_obj.search(cr, uid, [('cost_id', 'in', ids)], context=context)
         line_obj.unlink(cr, uid, unlink_ids, context=context)
@@ -319,22 +341,25 @@ class stock_landed_cost(osv.osv):
                 for valuation in cost.valuation_adjustment_lines:
                     value = 0.0
                     if valuation.cost_line_id and valuation.cost_line_id.id == line.id:
+                        local_context = context.copy()
+                        local_context['date'] = cost.date
+                        price_unit = self.pool.get('res.currency').compute(cr, uid, line.currency_id.id, cost.company_id.currency_id.id, line.price_unit, context=local_context)
                         if line.split_method == 'by_quantity' and total_qty:
-                            per_unit = (line.price_unit / total_qty)
+                            per_unit = (price_unit / total_qty)
                             value = valuation.quantity * per_unit
                         elif line.split_method == 'by_weight' and total_weight:
-                            per_unit = (line.price_unit / total_weight)
+                            per_unit = (price_unit / total_weight)
                             value = valuation.weight * per_unit
                         elif line.split_method == 'by_volume' and total_volume:
-                            per_unit = (line.price_unit / total_volume)
+                            per_unit = (price_unit / total_volume)
                             value = valuation.volume * per_unit
                         elif line.split_method == 'equal':
-                            value = (line.price_unit / total_line)
+                            value = (price_unit / total_line)
                         elif line.split_method == 'by_current_cost_price' and total_cost:
-                            per_unit = (line.price_unit / total_cost)
+                            per_unit = (price_unit / total_cost)
                             value = valuation.former_cost * per_unit
                         else:
-                            value = (line.price_unit / total_line)
+                            value = (price_unit / total_line)
 
                         if digits:
                             value = float_round(value, precision_digits=digits[1], rounding_method='UP')
@@ -372,9 +397,13 @@ class stock_landed_cost_lines(osv.osv):
         'name': fields.char('Description'),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'price_unit': fields.float('Cost', required=True, digits_compute=dp.get_precision('Product Price')),
         'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', required=True),
         'account_id': fields.many2one('account.account', 'Account', domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
+    }
+    _defaults = {
+        'currency_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
     }
 
 class stock_valuation_adjustment_lines(osv.osv):

@@ -100,10 +100,15 @@ class res_groups(osv.osv):
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
+        'menu_hidden': fields.many2many('ir.ui.menu', 'ir_ui_menu_hide_group_rel', 'gid', 'menu_id', 'Hidden Menu'),
         'view_access': fields.many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', 'Views'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
         'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
+        'property': fields.boolean('Property Group', help="This group is used on the property fields"),
+    }
+    _defaults = {
+        'property': False,
     }
 
     _sql_constraints = [
@@ -134,6 +139,17 @@ class res_groups(osv.osv):
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
         return res
+    
+    def _group_property_get(self, cr, uid, object=False, field=False, context=None):
+        """
+        Return the groups belong the user used on the property fields
+        """
+        if not context:
+            context = {}
+        group_ids = self.search(cr, uid, [('property','=',True),('users','in',[uid])], context=context)
+        if group_ids:
+            return group_ids[0]
+        return False
 
 class res_users(osv.osv):
     """ User class. A res.users record models an OpenERP user and is different
@@ -273,6 +289,7 @@ class res_users(osv.osv):
         'password': '',
         'active': True,
         'customer': False,
+        'is_company': False,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
@@ -511,7 +528,6 @@ class res_users(osv.osv):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise openerp.exceptions.AccessDenied()
-        db = self.pool.db_name
         if self.__uid_cache.setdefault(db, {}).get(uid) == passwd:
             return
         cr = self.pool.cursor()
@@ -569,11 +585,23 @@ class res_users(osv.osv):
         :return: True if the current user is a member of the group with the
            given external ID (XML ID), else False.
         """
+        if group_ext_id.isdigit():
+            return self.has_group_id(cr, uid, group_ext_id)
         assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
         module, ext_id = group_ext_id.split('.')
         cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
+        return bool(cr.fetchone())
+    def has_group_id(self, cr, uid, group_id):
+        """Checks whether user belongs to given group id.
+
+        :param int group_id: Group ID.
+        :return: True if the current user is a member of the group with the
+           given ID, else False.
+        """
+        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid=%s""",
+                   (uid, group_id))
         return bool(cr.fetchone())
     # for a few places explicitly clearing the has_group cache
     has_group.clear_cache = _has_group.clear_cache

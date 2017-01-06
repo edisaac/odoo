@@ -189,6 +189,7 @@ class sale_order(osv.osv):
         'client_order_ref': fields.char('Reference/Description', copy=False),
         'state': fields.selection([
             ('draft', 'Draft Quotation'),
+            ('confirm', 'Confirmed'),
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
             ('waiting_date', 'Waiting Schedule'),
@@ -910,13 +911,6 @@ class sale_order_line(osv.osv):
             res[line.id] = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
         return res
 
-    def _get_sale_order(self, cr, uid, ids, context=None):
-        result = set()
-        for order in self.pool['sale.order'].browse(cr, uid, ids, context=context):
-            for line in order.order_line:
-                result.add(line.id)
-        return list(result)
-
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -951,9 +945,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Cancelled\' status is set when a user cancel the sales order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
-        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store={
-            'sale.order': (_get_sale_order, ['company_id'], 20),
-        }, readonly=True),
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'procurement_ids': fields.one2many('procurement.order', 'sale_line_id', 'Procurements'),
     }
@@ -1220,10 +1212,15 @@ class sale_order_line(osv.osv):
 
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
+                discount = self.pool.get('product.pricelist').discount_get(cr, uid, [pricelist],
+                                                                            product, qty or 1.0, partner_id, {
+                                                                                'uom': uom or result.get('product_uom'),
+                                                                                'date': date_order,
+                                                                                })[pricelist]
                 price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
-                result.update({'price_unit': price})
+                result.update({'price_unit': price, 'discount': discount})
                 if context.get('uom_qty_change', False):
-                    values = {'price_unit': price}
+                    values = {'price_unit': price, 'discount': discount}
                     if result.get('product_uos_qty'):
                         values['product_uos_qty'] = result['product_uos_qty']
                     return {'value': values, 'domain': {}, 'warning': False}

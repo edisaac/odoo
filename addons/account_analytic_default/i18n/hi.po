@@ -3,14 +3,13 @@
 # * account_analytic_default
 # 
 # Translators:
-# Lata Verma <lataverma@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-09-02 20:05+0000\n"
-"Last-Translator: Lata Verma <lataverma@gmail.com>\n"
+"PO-Revision-Date: 2015-07-17 06:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Hindi (http://www.transifex.com/odoo/odoo-8/language/hi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,18 +20,18 @@ msgstr ""
 #. module: account_analytic_default
 #: field:product.product,rules_count:0 field:product.template,rules_count:0
 msgid "# Analytic Rules"
-msgstr "# विश्लेषणात्मक नियम"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
-msgstr "खाते"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
-msgstr "विश्लेषणात्मक खाता"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
@@ -41,12 +40,12 @@ msgstr "विश्लेषणात्मक खाता"
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 msgid "Analytic Defaults"
-msgstr "विश्लेषणात्मक चूक"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "विश्लेषणात्मक वितरण"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -54,7 +53,7 @@ msgstr "विश्लेषणात्मक वितरण"
 #: view:product.product:account_analytic_default.product_form_view_default_analytic_button
 #: view:product.template:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
-msgstr "विश्लेषणात्मक नियम"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
@@ -70,22 +69,22 @@ msgstr "शर्तें"
 #. module: account_analytic_default
 #: field:account.analytic.default,create_uid:0
 msgid "Created by"
-msgstr "निर्माण कर्ता"
+msgstr ""
 
 #. module: account_analytic_default
 #: field:account.analytic.default,create_date:0
 msgid "Created on"
-msgstr "निर्माण तिथि"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytic Account."
-msgstr "इस विश्लेषणात्मक खाते के लिए डिफ़ॉल्ट अंतिम तारीख।"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytic Account."
-msgstr "इस विश्लेषणात्मक खाते के लिए डिफ़ॉल्ट  प्रारंभिक तिथि।"
+msgstr ""
 
 #. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
@@ -95,23 +94,23 @@ msgstr "समाप्ति तिथि"
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
 msgid "Entries"
-msgstr "प्रविष्टियां"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "विश्लेषणात्मक वितरण की एक सूची प्रदर्शित करते वक्त अनुक्रम क्रम देता है।"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
-msgstr "वर्गीकरण का आधार"
+msgstr ""
 
 #. module: account_analytic_default
 #: field:account.analytic.default,id:0
 msgid "ID"
-msgstr "पहचान"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -121,12 +120,12 @@ msgstr "चालान क्रम"
 #. module: account_analytic_default
 #: field:account.analytic.default,write_uid:0
 msgid "Last Updated by"
-msgstr "अंतिम सुधारकर्ता"
+msgstr ""
 
 #. module: account_analytic_default
 #: field:account.analytic.default,write_date:0
 msgid "Last Updated on"
-msgstr "अंतिम सुधार की तिथि"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
@@ -154,7 +153,7 @@ msgstr "उत्पाद  प्रारूप"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "बिक्री सूची पंक्ति"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,company_id:0
@@ -162,7 +161,7 @@ msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
-msgstr "एक कम्पनी का चयन कीजिए जो विश्लेषणात्मक डिफ़ॉल्ट में निर्दिष्ट विश्लेषणात्मक खाते का उपयोग करे (जैसे नया ग्राहक चालान या बिक्री आदेश बनाया जाए अगर हम इस कपंनी को चुने, यह स्वचालित रूप से एक विश्लेषणात्मक खाते के रूप में इसे लेगा।)"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -170,7 +169,7 @@ msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
-msgstr "एक साझेदार का चयन कीजिए जो विश्लेषणात्मक डिफ़ॉल्ट में निर्दिष्ट विश्लेषणात्मक खाते का उपयोग करे (जैसे नया ग्राहक चालान या बिक्री आदेश बनाया जाए अगर हम इस कपंनी को चुने, यह स्वचालित रूप से एक विश्लेषणात्मक खाते के रूप में इसे लेगा।)"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -178,13 +177,13 @@ msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
-msgstr "एक उत्पाद का चयन कीजिए जो विश्लेषणात्मक डिफ़ॉल्ट में निर्दिष्ट विश्लेषणात्मक खाते का उपयोग करे (जैसे नया ग्राहक चालान या बिक्री आदेश बनाया जाए अगर हम इस कपंनी को चुने, यह स्वचालित रूप से एक विश्लेषणात्मक खाते के रूप में इसे लेगा।)"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
-msgstr "एक उपभोक्ता का चयन कीजिए जो विश्लेषणात्मक डिफ़ॉल्ट में निर्दिष्ट विश्लेषणात्मक खाते का उपयोग करे।"
+msgstr ""
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0

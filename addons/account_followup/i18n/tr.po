@@ -4,13 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Murat Kaplan <muratk@projetgrup.com>, 2015-2016
+# Murat Kaplan <muratk@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-10-22 12:32+0000\n"
+"PO-Revision-Date: 2015-12-11 13:24+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -320,12 +320,12 @@ msgid ""
 "                the customer.\n"
 "              </p>\n"
 "          "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Tahsilat Takibi düzeylerini ve ilişkili eylemlerini tanımlamak için tıklayın.\n              </p><p>\n                Her adım için yapılması gereken eylemleri ve gecikme günlerini belirleyin. Müşteriye\n                özel iletiler göndermek için yazıcı ve eposta şablonları kullanılabilir.\n              </p>\n          "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                İzleme düzeylerini ve ilişkili eylemlerini tanımlamak için tıklayın.\n              </p><p>\n                Her adım için yapılması gereken eylemleri ve gecikme günlerini belirleyin. Müşteriye\n                özel iletiler göndermek için yazıcı ve eposta şablonları kullanılabilir.\n              </p>\n          "
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr "Hesap Takibi"
+msgstr "Hesap İzleme"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -403,7 +403,7 @@ msgid ""
 "Below is the history of the transactions of this\n"
 "                            customer. You can check \"No Follow-up\" in\n"
 "                            order to exclude it from the next follow-up actions."
-msgstr "Aşağıda bu müşteriye ait işlemler geçmişi\n                            vardır. Sonraki takip eylemlerinin dışında tutmak için\n                            \"Takip Yok\"u işaretleyebilirsiniz."
+msgstr "Aşağıda bu müşteriye ait işlemler geçmişi\n                            vardır. Sonraki izleme eylemlerinin dışında tutmak için\n                            \"İzleme Yok\"u işaretleyebilirsiniz."
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -419,7 +419,7 @@ msgstr "İptal"
 #: help:account_followup.print,test_print:0
 msgid ""
 "Check if you want to print follow-ups without changing follow-up level."
-msgstr "Takip düzeyini değiştirmeden takipleri yazdırmak istiyorsanız işaretleyin."
+msgstr "İzleme düzeyini değiştirmeden izlemeleri yazdırmak istiyorsanız işaretleyin."
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -442,7 +442,7 @@ msgstr "Şirket"
 #. module: account_followup
 #: view:account.config.settings:account_followup.view_account_config_settings_inherit
 msgid "Configure your follow-up levels"
-msgstr "Tekip düzeylerinizi yapılandırın"
+msgstr "İzleme düzeylerinizi yapılandırın"
 
 #. module: account_followup
 #: field:account_followup.followup,create_uid:0
@@ -468,7 +468,7 @@ msgstr "Alacak"
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_tree
 msgid "Customer Followup"
-msgstr "Müşteri Tahsilat Takibi"
+msgstr "Müşteri İzlemesi"
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
@@ -488,7 +488,7 @@ msgstr "Tarih:"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr "Takip düzeyi günleri farklı olmalı"
+msgstr "İzleme düzeyi günleri farklı olmalı"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -506,7 +506,7 @@ msgstr "Açıklama"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
 msgid "Do Manual Follow-Ups"
-msgstr "Elle Takip Yap"
+msgstr "Elle İzleme Yap"
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
@@ -575,22 +575,22 @@ msgstr "İlk Hareket"
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr "Tahsilat Takibi"
+msgstr "İzlemeler"
 
 #. module: account_followup
 #: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
-msgstr "Tahsilat Takibi"
+msgstr "İzleme"
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr "Tahsilat Takibi Eylemi"
+msgstr "İzleme Eylemi"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr "Tahsilat Takibi Analizi"
+msgstr "İzleme Analizi"
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_followup_form
@@ -599,60 +599,60 @@ msgstr "Tahsilat Takibi Analizi"
 #: model:ir.ui.menu,name:account_followup.account_followup_main_menu
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Follow-up"
-msgstr "Tahsilat Takibi"
+msgstr "İzleme"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr "Tahsilat Takibi Kriteri"
+msgstr "İzleme Kriteri"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Follow-up Entries with period in current year"
-msgstr "Geçerli yıl içindeki dönemin Tahsilat Takibi Kayıtları"
+msgstr "Geçerli yıl içindeki dönemin İzleme Kayıtları"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Follow-up Level"
-msgstr "Tahsilat Takibi Düzeyi"
+msgstr "İzleme Düzeyi"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr "Tahsilat Takibi Düzeyleri"
+msgstr "İzleme Düzeyleri"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.action_report_followup
 msgid "Follow-up Report"
-msgstr "Tahsilat Takibi Raporu"
+msgstr "İzleme Raporu"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr "Tahsilat Takibi Sorumlusu"
+msgstr "İzleme Sorumlusu"
 
 #. module: account_followup
 #: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr "Tahsilat Takibi Gönderim Tarihi"
+msgstr "İzleme Gönderim Tarihi"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr "Tahsilat Takibi İstatistikleri"
+msgstr "İzleme İstatistikleri"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Follow-up Statistics by Partner"
-msgstr "İş Ortağına göre Tahsilat Takibi İstatistikleri"
+msgstr "İş Ortağına göre İzleme İstatistikleri"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_tree
 msgid "Follow-up Steps"
-msgstr "Tahsilat Takibi Adımları"
+msgstr "İzleme Adımları"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -663,28 +663,28 @@ msgstr "Bunun izleme mektubu "
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_graph
 msgid "Follow-up lines"
-msgstr "Tahsilat Takibi kalemleri"
+msgstr "İzleme kalemleri"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 msgid "Follow-ups Sent"
-msgstr "Gönderilen Tahsilat Takipleri"
+msgstr "Gönderilen İzlemeler"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Follow-ups To Do"
-msgstr "Yapılacak Tahsilat Takipleri"
+msgstr "Yapılacak İzlemeler"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Followup Level"
-msgstr "Tahsilat Takibi Seviyesi"
+msgstr "İzleme Seviyesi"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr "Tahsilat Takibi kalemleri görüntüleme sıralamasını verir."
+msgstr "İzleme kalemleri görüntüleme sıralamasını verir."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -764,27 +764,27 @@ msgstr "Son Hareket"
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "En son Tahsilat Takibi"
+msgstr "En son İzleme"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_date:0
 msgid "Latest Follow-up Date"
-msgstr "Enson Tahsilat Takibi Tarihi"
+msgstr "Enson İzleme Tarihi"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr "En son Tahsilat Takibi Düzeyi"
+msgstr "Enson İzleme Düzeyi"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr "İhtilafsız En son Tahsilat Takibi Düzeyi"
+msgstr "İhtilafsız Enson İzleme Düzeyi"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Latest Follow-up Month"
-msgstr "Son Tahsilat Takibi Ayı"
+msgstr "Son İzleme Ayı"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
@@ -794,12 +794,12 @@ msgstr "İş Ortağının izleme düzeyinin değiştirildiği enson tarih"
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr "En son Tahsilat Takibi"
+msgstr "Enson İzleme"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 msgid "Latest followup"
-msgstr "En son Tahsilat Takibi"
+msgstr "En son İzleme"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -826,7 +826,7 @@ msgstr "Elle Eylem"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
 msgid "Manual Follow-Ups"
-msgstr "Elle Tahsilat Takibi"
+msgstr "Elle İzleme"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -836,18 +836,18 @@ msgstr "Vade Sonu Tarihi"
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr "En Üst Tahsilat Takibi Düzeyi"
+msgstr "Enüst İzleme Düzeyi"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
 #: model:ir.ui.menu,name:account_followup.menu_sale_followup
 msgid "My Follow-Ups"
-msgstr "Tahsilat Takibi Kayıtlarım"
+msgstr "İzlemelerim"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "My Follow-ups"
-msgstr "Tahsilat Takibi Kayıtlarım"
+msgstr "İzlemelerim"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -924,12 +924,12 @@ msgstr "Gecikmiş Borçlu İş Ortakları"
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Payment Follow-up"
-msgstr "Tahsilat Takibi"
+msgstr "Ödeme İzlemesi"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
-msgstr "Tahsilat Takipleri"
+msgstr "Ödeme İzlemeleri"
 
 #. module: account_followup
 #: help:res.partner,payment_note:0
@@ -944,7 +944,7 @@ msgstr "Dönem"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr "Müşterilere Tahsilat Takibi Yazısı Yazdır & E-Posta Gönder"
+msgstr "Müşterilere İzleme Yazdır & Posta Gönder"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -954,7 +954,7 @@ msgstr "Vadesi Geçmiş Ödemeleri Yazdır"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Print overdue payments report independent of follow-up line"
-msgstr "Tahsilat Takibi kalemlerinden ayrı olarak vadesi geçen ödemeler raporu yazdır"
+msgstr "İzleme kalemlerinden ayrı olarak vadesi geçen ödemeler raporu yazdır"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -996,7 +996,7 @@ msgstr "Gönderilen farklı mektup ve epostalardan alınan sonuçlar"
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_filter
 msgid "Search Follow-up"
-msgstr "Tahsilat Takibi Ara"
+msgstr "İzleme Ara"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
@@ -1016,7 +1016,7 @@ msgstr "Epostayı İş Ortağının Dilinde Gönder"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
-msgstr "Gönder"
+msgstr "İzlemeleri Gönder"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
@@ -1054,7 +1054,7 @@ msgstr "Epostalar gönder ve mektuplar oluştur"
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid "Send follow-ups"
-msgstr "Gönder"
+msgstr "İzleme gönder"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1221,7 +1221,7 @@ msgstr "Buraya izleme düzeyine uygun olarak\n                            bilgil
 #, python-format
 msgid ""
 "You became responsible to do the next action for the payment follow-up of"
-msgstr "Bunun tahsilat takibi için yapılacak sonraki eylemden sorumlu oldunuz"
+msgstr "Bunun ödeme izlemesi için yapılacak sonraki eylemden sorumlu oldunuz"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0

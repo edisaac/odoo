@@ -48,7 +48,7 @@ class sale_order_line(osv.osv):
             item_obj = self.pool.get('product.pricelist.item')
             price_type_obj = self.pool.get('product.price.type')
             product_obj = self.pool.get('product.product')
-            field_name = 'list_price'
+            field_name = 'lst_price'
             rule_id = res_dict.get(pricelist) and res_dict[pricelist][1] or False
             currency_id = None
             if rule_id:
@@ -82,7 +82,9 @@ class sale_order_line(osv.osv):
         pricelist_obj=self.pool.get('product.pricelist')
         product_obj = self.pool.get('product.product')
         account_tax_obj = self.pool.get('account.tax')
-        if product and pricelist and self.pool.get('res.users').has_group(cr, uid, 'sale.group_discount_per_so_line'):
+        if result.has_key('discount'):
+            return res
+        elif product and pricelist and self.pool.get('res.users').has_group(cr, uid, 'sale.group_discount_per_so_line'):
             if result.get('price_unit',False):
                 price=result['price_unit']
             else:

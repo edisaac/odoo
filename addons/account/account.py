@@ -59,14 +59,25 @@ def check_cycle(self, cr, uid, ids, context=None):
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
-        'income_currency_exchange_account_id': fields.many2one(
-            'account.account',
+        'income_currency_exchange_account_id': fields.property(
+            type='many2one',
+            relation='account.account',
             string="Gain Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
-        'expense_currency_exchange_account_id': fields.many2one(
-            'account.account',
+        'expense_currency_exchange_account_id': fields.property(
+            type='many2one',
+            relation='account.account',
             string="Loss Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
+
+#         'income_currency_exchange_account_id': fields.many2one(
+#             'account.account',
+#             string="Gain Exchange Rate Account",
+#             domain="[('type', '=', 'other')]",),
+#         'expense_currency_exchange_account_id': fields.many2one(
+#             'account.account',
+#             string="Loss Exchange Rate Account",
+#             domain="[('type', '=', 'other')]",),
     }
 
 class account_payment_term(osv.osv):
@@ -154,6 +165,7 @@ class account_account_type(osv.osv):
     def _get_financial_report_ref(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
+        financial_repor_ids = []
         financial_report_ref = {}
         for key, financial_report in [
                     ('asset','account_financial_report_assets0'),
@@ -165,14 +177,21 @@ class account_account_type(osv.osv):
                 financial_report_ref[key] = obj_financial_report.browse(cr, uid,
                     obj_data.get_object_reference(cr, uid, 'account', financial_report)[1],
                     context=context)
+                financial_repor_ids += [obj_data.get_object_reference(cr, uid, 'account', financial_report)[1]]
             except ValueError:
                 pass
+        for financial_report in obj_financial_report.browse(cr, uid, obj_financial_report.search(cr, uid, [('type','=','account_type'),
+                                                                         ('id','not in',financial_repor_ids)], order="sequence asc", context=context), context=context):
+            financial_report_ref[financial_report.id] = financial_report
         return financial_report_ref
 
     def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
         res = {}
         financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
         for record in self.browse(cr, uid, ids, context=context):
+            if record.financial_report_id and record.financial_report_id.id in financial_report_ref:
+                res[record.id] = record.financial_report_id.id
+                continue
             res[record.id] = 'none'
             for key, financial_report in financial_report_ref.items():
                 list_ids = [x.id for x in financial_report.account_type_ids]
@@ -189,9 +208,18 @@ class account_account_type(osv.osv):
             list_ids = [x.id for x in financial_report.account_type_ids]
             if account_type_id in list_ids:
                 obj_financial_report.write(cr, uid, [financial_report.id], {'account_type_ids': [(3, account_type_id)]})
+        if field_value and field_value != 'none':
+            self.write(cr, uid, [account_type_id], {'financial_report_id': financial_report_ref[field_value].id}, context=context)
         #write it in the good place
         if field_value != 'none':
-            return obj_financial_report.write(cr, uid, [financial_report_ref[field_value].id], {'account_type_ids': [(4, account_type_id)]})
+            return financial_report_ref.has_key(field_value) and obj_financial_report.write(cr, uid, [financial_report_ref[field_value].id], {'account_type_ids': [(4, account_type_id)]})
+
+    def _get_report_type(self, cr, uid, context=None):
+        res = [('none','/')]
+        reports = self._get_financial_report_ref(cr, uid, context=context)
+        for k in reports:
+            res += [(k,"%s%s"%(reports[k].sequence and "[%s] "%reports[k].sequence or "", reports[k].name))]
+        return res
 
     _columns = {
         'name': fields.char('Account Type', required=True, translate=True),
@@ -202,13 +230,10 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', store=True,
-            selection= [('none','/'),
-                        ('income', _('Profit & Loss (Income account)')),
-                        ('expense', _('Profit & Loss (Expense account)')),
-                        ('asset', _('Balance Sheet (Asset account)')),
-                        ('liability', _('Balance Sheet (Liability account)'))], help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
+        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category',
+            selection= _get_report_type, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
+        'financial_report_id': fields.many2one('account.financial.report', string="Financial Report", readonly=True)
     }
     _defaults = {
         'close_method': 'none',
@@ -284,6 +309,7 @@ class account_account(osv.osv):
                 ids3.append(child.id)
         if ids3:
             ids3 = self._get_children_and_consol(cr, uid, ids3, context)
+
         return ids2 + ids3
 
     def __compute(self, cr, uid, ids, field_names, arg=None, context=None,
@@ -335,7 +361,12 @@ class account_account(osv.osv):
                        " WHERE l.account_id IN %s " \
                             + filters +
                        " GROUP BY l.account_id")
-            params = (tuple(children_and_consolidated),) + query_params
+            cac = children_and_consolidated
+            if context.get('report_custom_filter', False):
+                custom_filter = self.pool['account.report.filter'].browse(cr, uid, context['report_custom_filter'], context=context)
+                if custom_filter.model == 'account.account':
+                    cac = self.search(cr, uid, eval(custom_filter.domain) + [('id','in',children_and_consolidated)], context=context)
+            params = (tuple(cac or [0]),) + query_params
             cr.execute(request, params)
 
             for row in cr.dictfetchall():
@@ -413,6 +444,16 @@ class account_account(osv.osv):
                 level += 1
                 parent = parent.parent_id
             res[account.id] = level
+        return res
+
+    def _get_chart_account(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            parent = account
+            while parent:
+                old_parent = parent
+                parent = parent.parent_id
+            res[account.id] = old_parent.id
         return res
 
     def _set_credit_debit(self, cr, uid, account_id, name, value, arg, context=None):
@@ -517,6 +558,8 @@ class account_account(osv.osv):
              store={
                     'account.account': (_get_children_and_consol, ['level', 'parent_id'], 10),
                    }),
+        'chart_account_id': fields.function(_get_chart_account, string="Chart Account", type='many2one',
+                                            relation='account.account', store=True),
     }
 
     _defaults = {
@@ -736,7 +779,7 @@ class account_journal(osv.osv):
     _columns = {
         'with_last_closing_balance': fields.boolean('Opening With Last Closing Balance', help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents."),
         'name': fields.char('Journal Name', required=True),
-        'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
+        'code': fields.char('Code', size=16, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for customer invoices journals."\
                                  " Select 'Purchase' for supplier invoices journals."\
@@ -770,7 +813,7 @@ class account_journal(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
+        ('code_company_uniq', 'unique (code, type, company_id)', 'The code of the journal must be unique per company !'),
         ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
     ]
 
@@ -819,8 +862,8 @@ class account_journal(osv.osv):
         seq = {
             'name': vals['name'],
             'implementation':'no_gap',
-            'prefix': prefix + "/%(year)s/",
-            'padding': 4,
+            'prefix': prefix + "-",
+            'padding': 6,
             'number_increment': 1
         }
         if 'company_id' in vals:
@@ -987,7 +1030,7 @@ class account_period(osv.osv):
     _defaults = {
         'state': 'draft',
     }
-    _order = "date_start, special desc"
+    _order = "date_start, code, special desc"
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
     ]
@@ -1852,7 +1895,7 @@ class account_tax_code(osv.osv):
 def get_precision_tax():
     def change_digit_tax(cr):
         res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Account')
-        return (16, res+3)
+        return (16, res+6)
     return change_digit_tax
 
 class account_tax(osv.osv):
@@ -1986,8 +2029,9 @@ class account_tax(osv.osv):
 
     _defaults = {
         'python_compute': '''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': '''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
+        'python_compute_inv': '''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
         'applicable_type': 'true',
+        'python_applicable': '''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = True''',
         'type': 'percent',
         'amount': 0,
         'price_include': 0,
@@ -2303,7 +2347,8 @@ class account_model(osv.osv):
         pt_obj = self.pool.get('account.payment.term')
         period_obj = self.pool.get('account.period')
 
-        context = dict(context or {})
+        if context is None:
+            context = {}
 
         if data.get('date', False):
             context = dict(context)
@@ -3078,7 +3123,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 res['domain']['sale_tax'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax'] = repr(purchase_tax_domain)
             if data.code_digits:
-               res['value'].update({'code_digits': data.code_digits})
+                res['value'].update({'code_digits': data.code_digits})
         return res
 
     def default_get(self, cr, uid, fields, context=None):

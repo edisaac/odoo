@@ -3,15 +3,14 @@
 # * project
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-09-29 13:31+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>\n"
+"PO-Revision-Date: 2016-05-16 11:53+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,7 +191,7 @@ msgstr "Datum dodjeljivanja"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr "Mjesec dodjeljivanja"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -235,12 +234,12 @@ msgstr "Blokiran"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr "Po odgovornom"
+msgstr ""
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
 msgid "By Reviewer"
-msgstr "Po kontroloru"
+msgstr ""
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
@@ -549,7 +548,7 @@ msgstr "Završni datum"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater than task start-date"
-msgstr "Greška! Završni datum zadatka mora biti veći od početnog!"
+msgstr ""
 
 #. module: project
 #: constraint:project.task:0
@@ -603,7 +602,7 @@ msgstr "Zahtjev za prilagodbom"
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded in Kanban View"
-msgstr "Zatvoreno u kanban načinu pregleda"
+msgstr ""
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -803,7 +802,7 @@ msgstr "Kanban"
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr "Zadnja poruka"
+msgstr ""
 
 #. module: project
 #: field:project.project,message_last_post:0
@@ -1214,7 +1213,7 @@ msgstr ""
 #: code:addons/project/project.py:200
 #, python-format
 msgid "Public project"
-msgstr "Javni projekt"
+msgstr ""
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1278,7 +1277,7 @@ msgstr "Odgovoran"
 #: field:project.task,reviewer_id:0
 #: field:report.project.task.user,reviewer_id:0
 msgid "Reviewer"
-msgstr "Kontrolor"
+msgstr ""
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1422,7 +1421,7 @@ msgstr "Aktivnosti na zadatku"
 #: model:mail.message.subtype,name:project.mt_project_task_assigned
 #: model:mail.message.subtype,name:project.mt_task_assigned
 msgid "Task Assigned"
-msgstr "Zadatak dodijeljen"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -1455,7 +1454,7 @@ msgstr ""
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
-msgstr "Zadatak spreman za sljedeću fazu"
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -1704,7 +1703,7 @@ msgstr "Iskoristivost"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Use Tasks"
-msgstr "Koristi zadatke"
+msgstr ""
 
 #. module: project
 #: field:project.config.settings,module_pad:0
@@ -1792,7 +1791,7 @@ msgstr "Nije moguće brisati projekt koji sadrži zadatke. Ili obrišite sve zad
 #: code:addons/project/project.py:435
 #, python-format
 msgid "You must assign members on the project '%s'!"
-msgstr "Morate dodijeliti članove na projekt '%s'!"
+msgstr ""
 
 #. module: project
 #: field:project.task.delegate,prefix:0

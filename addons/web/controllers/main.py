@@ -73,7 +73,7 @@ def serialize_exception(f):
             se = _serialize_exception(e)
             error = {
                 'code': 200,
-                'message': "Odoo Server Error",
+                'message': "CubicERP Server Error",
                 'data': se
             }
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
@@ -101,7 +101,7 @@ def ensure_db(redirect='/web/database/selector'):
     # If the db is taken out of a query parameter, it will be checked against
     # `http.db_filter()` in order to ensure it's legit and thus avoid db
     # forgering that could lead to xss attacks.
-    db = request.params.get('db') and request.params.get('db').strip()
+    db = request.params.get('db')
 
     # Ensure db is legit
     if db and db not in http.db_filter([db]):
@@ -1125,7 +1125,7 @@ class Binary(http.Controller):
         else:
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field) or '')
-        if not filecontent:
+        if not filecontent and res.get(field) <> '===':
             raise ValueError(_("No content found for field '%s' on '%s:%s'") %
                 (field, model, id))
         else:

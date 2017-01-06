@@ -1314,7 +1314,7 @@ class stock_picking(osv.osv):
 
                         #check if the quant is matching the operation details
                         if ops.package_id:
-                            flag = quant.package_id == ops.package_id
+                            flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id])], context=context)) or False
                         else:
                             flag = not quant.package_id.id
                         flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
@@ -1584,7 +1584,7 @@ class stock_picking(osv.osv):
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Lot/Serial'
     _columns = {
         'name': fields.char('Serial Number', required=True, help="Unique Serial Number"),
@@ -1696,6 +1696,7 @@ class stock_move(osv.osv):
         return res
 
     def _get_string_qty_information(self, cr, uid, ids, field_name, args, context=None):
+        settings_obj = self.pool.get('stock.config.settings')
         uom_obj = self.pool.get('product.uom')
         res = dict.fromkeys(ids, '')
         precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')
@@ -1708,8 +1709,11 @@ class stock_move(osv.osv):
             total_available = float_round(total_available, precision_digits=precision)
             info = str(total_available)
             #look in the settings if we need to display the UoM name or not
-            if self.pool.get('res.users').has_group(cr, uid, 'product.group_uom'):
-                info += ' ' + move.product_uom.name
+            config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
+            if config_ids:
+                stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
+                if stock_settings.group_uom:
+                    info += ' ' + move.product_uom.name
             if move.reserved_availability:
                 if move.reserved_availability != total_available:
                     #some of the available quantity is assigned and some are available but not reserved
@@ -1826,7 +1830,7 @@ class stock_move(osv.osv):
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits=0,
                                          states={'done': [('readonly', True)]}, help="Remaining Quantity in default UoM according to operations matched with this move"),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
-        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
+        'group_id': fields.many2one('procurement.group', 'Procurement Group',  ondelete='cascade'),
         'rule_id': fields.many2one('procurement.rule', 'Procurement Rule', help='The pull rule that created this stock move'),
         'push_rule_id': fields.many2one('stock.location.path', 'Push Rule', help='The push rule that created this stock move'),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
@@ -1853,6 +1857,8 @@ class stock_move(osv.osv):
 
     def _default_location_source(self, cr, uid, context=None):
         context = context or {}
+        if context.get('default_location_dest_id', False):
+            return context.get('default_location_dest_id')
         if context.get('default_picking_type_id', False):
             pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['default_picking_type_id'], context=context)
             return pick_type.default_location_src_id and pick_type.default_location_src_id.id or False
@@ -2291,6 +2297,9 @@ class stock_move(osv.osv):
         self.check_tracking_product(cr, uid, move.product_id, lot_id, move.location_id, move.location_dest_id, context=context)
         
 
+    def _get_main_domain_move(self, cr, uid, move, context=None):
+        return [('reservation_id', '=', False), ('qty', '>', 0)]
+
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
         """
@@ -2315,7 +2324,7 @@ class stock_move(osv.osv):
                 todo_moves.append(move)
 
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
-                main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
+                main_domain[move.id] = self._get_main_domain_move(cr, uid, move, context=context)
 
                 #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
                 ancestors = self.find_move_ancestors(cr, uid, move, context=context)
@@ -2684,12 +2693,19 @@ class stock_inventory(osv.osv):
         """
         #default available choices
         res_filter = [('none', _('All products')), ('partial', _('Manual Selection of Products')), ('product', _('One product only'))]
-        if self.pool.get('res.users').has_group(cr, uid, 'stock.group_tracking_owner'):
+        settings_obj = self.pool.get('stock.config.settings')
+        config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
+        #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
+        if not config_ids:
+            return res_filter
+
+        stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
+        if stock_settings.group_stock_tracking_owner:
             res_filter.append(('owner', _('One owner only')))
             res_filter.append(('product_owner', _('One product for a specific owner')))
-        if self.pool.get('res.users').has_group(cr, uid, 'stock.group_production_lot'):
+        if stock_settings.group_stock_production_lot:
             res_filter.append(('lot', _('One Lot/Serial Number')))
-        if self.pool.get('res.users').has_group(cr, uid, 'stock.group_tracking_lot'):
+        if stock_settings.group_stock_tracking_lot:
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 

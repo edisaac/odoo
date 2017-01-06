@@ -6147,7 +6147,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     on_click_stage: _.debounce(function (ev) {
         var self = this;
-        var $li = $(ev.currentTarget);
+        var $li = $(ev.target.parentElement); // $(ev.currentTarget);
         var ul = $li.closest('.oe_form_field_status');
         var val;
         if (ul.attr('disabled')) {
@@ -6178,7 +6178,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                 });
             }
         }
-    }, 300, true),
+    }, 300),
 });
 
 instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({

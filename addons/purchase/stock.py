@@ -128,10 +128,12 @@ class stock_move(osv.osv):
             purchase_line = move.purchase_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
+            res['account_analytic_id'] = purchase_line.account_analytic_id.id
         elif inv_type == 'in_refund' and move.origin_returned_move_id.purchase_line_id:
             purchase_line = move.origin_returned_move_id.purchase_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
+            res['account_analytic_id'] = purchase_line.account_analytic_id.id
         return res
 
     def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):

@@ -48,10 +48,31 @@ class stock_invoice_onshipping(osv.osv_memory):
         pick = pickings and pickings[0]
         if not pick or not pick.move_lines:
             return 'sale'
+        for move in pick.move_lines:
+            if move.invoice_state == '2binvoiced':
+                src_usage = move.location_id.usage
+                dest_usage = move.location_dest_id.usage
+                break
         type = pick.picking_type_id.code
-        usage = pick.move_lines[0].location_id.usage if type == 'incoming' else pick.move_lines[0].location_dest_id.usage
-
-        return JOURNAL_TYPE_MAP.get((type, usage), ['sale'])[0]
+        if type == 'outgoing' and dest_usage == 'supplier':
+            journal_type = 'purchase_refund'
+        elif type == 'outgoing' and dest_usage == 'customer':
+            journal_type = 'sale'
+        elif type == 'incoming' and src_usage == 'supplier':
+            journal_type = 'purchase'
+        elif type == 'incoming' and src_usage == 'customer':
+            journal_type = 'sale_refund'
+        elif type == 'incoming' and dest_usage == 'internal':
+            journal_type = 'purchase'
+        elif type == 'internal' and dest_usage == 'internal':
+            journal_type = 'purchase'
+        elif type == 'outgoing' and dest_usage == 'transit':
+            journal_type = 'sale'
+        elif type == 'incoming' and src_usage == 'transit':
+            journal_type = 'purchase'
+        else:
+            journal_type = 'sale'
+        return journal_type
 
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"

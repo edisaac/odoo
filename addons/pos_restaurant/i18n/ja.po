@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-11-15 05:46+0000\n"
+"PO-Revision-Date: 2016-08-01 10:13+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgstr "戻る"
 #. module: pos_restaurant
 #: view:pos.config:pos_restaurant.view_pos_config_form
 msgid "Bar & Restaurant"
-msgstr "バー&レストラン"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -73,7 +73,7 @@ msgstr "仕入先請求書"
 #. module: pos_restaurant
 #: field:pos.config,iface_printbill:0
 msgid "Bill Printing"
-msgstr "請求書印刷"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -81,7 +81,7 @@ msgstr "請求書印刷"
 #: field:pos.config,iface_splitbill:0
 #, python-format
 msgid "Bill Splitting"
-msgstr "請求分割"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -117,7 +117,7 @@ msgstr "割引"
 #. module: pos_restaurant
 #: help:pos.config,iface_splitbill:0
 msgid "Enables Bill Splitting in the Point of Sale"
-msgstr "POSでの請求分割を有効可"
+msgstr ""
 
 #. module: pos_restaurant
 #: field:restaurant.printer,id:0
@@ -153,7 +153,7 @@ msgstr "順番"
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
 #: field:pos.config,printer_ids:0
 msgid "Order Printers"
-msgstr "オーダプリンタ"
+msgstr ""
 
 #. module: pos_restaurant
 #: view:restaurant.printer:pos_restaurant.view_restaurant_printer_form
@@ -163,22 +163,22 @@ msgstr ""
 #. module: pos_restaurant
 #: field:restaurant.printer,product_categories_ids:0
 msgid "Printed Product Categories"
-msgstr "印刷対象製品カテゴリ"
+msgstr ""
 
 #. module: pos_restaurant
 #: field:restaurant.printer,name:0
 msgid "Printer Name"
-msgstr "プリンタ名"
+msgstr ""
 
 #. module: pos_restaurant
 #: field:restaurant.printer,proxy_ip:0
 msgid "Proxy IP Address"
-msgstr "プロキシIPアドレス"
+msgstr ""
 
 #. module: pos_restaurant
 #: view:restaurant.printer:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
-msgstr "レストランオーダプリンタ"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -213,7 +213,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:29
 #, python-format
 msgid "Tel:"
-msgstr "TEL:"
+msgstr ""
 
 #. module: pos_restaurant
 #: help:restaurant.printer,proxy_ip:0

@@ -822,7 +822,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 return p || _t('Undefined');
             }).join('/');
             if (dim_x === 0) {
-                title = self.measure_label || _t('Undefined');
+                title = self.measure_label;
             }
             return {x: title, y: self.pivot.get_total(row)[0]};
         });

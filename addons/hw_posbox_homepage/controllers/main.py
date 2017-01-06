@@ -37,10 +37,9 @@ index_template = """
     <body>
         <h1>Your PosBox is up and running</h1>
         <p>
-        The PosBox is a hardware adapter that allows you to use
-        receipt printers and barcode scanners with Odoo's Point of
-        Sale, <b>version 8.0 or later</b>. You can start an <a href='https://www.odoo.com/start'>online free trial</a>,
-        or <a href='https://www.odoo.com/page/download'>download and install</a> it yourself.
+        The PosBox is an hardware adapter that allows you to use 
+        receipt printers and barcode scanners with Point of
+        Sale, <b>version 8.0 or later</b>.
         </p>
         <p>
         For more information on how to setup the Point of Sale with
@@ -55,14 +54,11 @@ index_template = """
         Wi-Fi can be configured by visiting the <a href='/wifi'>Wi-Fi configuration page</a>.
         </p>
         <p>
-        If you need to grant remote debugging access to a developer, you can do it <a href='/remote_connect'>here</a>.
-        </p>
-        <p>
-        The PosBox software installed on this posbox is <b>version 15</b>,
+        The PosBox software installed on this posbox is <b>version 14</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>
-        <p>For any other question, please contact the Odoo support at <a href='mailto:support@odoo.com'>support@odoo.com</a>
+        <p>For any other question, please contact the CubicERP support at <a href='mailto:info@cubicerp.com'>info@cubicerp.com</a>
         </p>
     </body>
 </html>

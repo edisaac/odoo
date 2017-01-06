@@ -50,11 +50,11 @@
         </record>
         <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
             <field name="name">Product Unit of Measure</field>
-            <field name="digits" eval="3"/>
+            <field name="digits" eval="2"/>
         </record>
         <record forcecreate="True" id="decimal_product_uos" model="decimal.precision">
             <field name="name">Product UoS</field>
-            <field name="digits" eval="3"/>
+            <field name="digits" eval="2"/>
         </record>
 
         <!--
@@ -195,7 +195,7 @@ parameter) will see those record just disappear.
     -->
         <record id="list_price" model="product.price.type">
             <field name="name">Public Price</field>
-            <field name="field">list_price</field>
+            <field name="field">lst_price</field>
         </record>
         <record id="standard_price" model="product.price.type">
             <field name="name">Cost Price</field>

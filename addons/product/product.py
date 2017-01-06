@@ -59,13 +59,13 @@ def check_ean(eancode):
     """returns True if eancode is a valid ean13 string, or null"""
     if not eancode:
         return True
-    if len(eancode) != 13:
-        return False
+    if len(eancode) == 13:
+        return ean_checksum(eancode) == int(eancode[-1])
     try:
         int(eancode)
     except:
         return False
-    return ean_checksum(eancode) == int(eancode[-1])
+    return True
 
 def sanitize_ean13(ean13):
     """Creates and returns a valid ean13 from an invalid one"""
@@ -608,7 +608,7 @@ class product_template(osv.osv):
     def _price_get_list_price(self, product):
         return 0.0
 
-    def _price_get(self, cr, uid, products, ptype='list_price', context=None):
+    def _price_get(self, cr, uid, products, ptype='lst_price', context=None):
         if context is None:
             context = {}
 
@@ -629,7 +629,7 @@ class product_template(osv.osv):
                 company_id = context.get('force_company') or product.env.user.company_id.id
                 product = product.with_context(force_company=company_id)
                 res[product.id] = res[product.id] = product.sudo()[ptype]
-            if ptype == 'list_price':
+            if ptype == 'lst_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
                 uom = product.uom_id or product.uos_id
@@ -756,6 +756,9 @@ class product_template(osv.osv):
 
         return product_template_id
 
+    def verify_change_uom(self, cr, uid, product_tmpl_id, context=None):
+        return False
+
     def write(self, cr, uid, ids, vals, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
         if isinstance(ids, (int, long)):
@@ -764,7 +767,7 @@ class product_template(osv.osv):
             new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
             for product in self.browse(cr, uid, ids, context=context):
                 old_uom = product.uom_po_id
-                if old_uom.category_id.id != new_uom.category_id.id:
+                if old_uom.category_id.id != new_uom.category_id.id and self.verify_change_uom(cr, uid, product.id, context=context):
                     raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         if 'standard_price' in vals:
             for prod_template_id in ids:
@@ -904,10 +907,10 @@ class product_product(osv.osv):
             if 'uom' in context:
                 uom = product.uos_id or product.uom_id
                 res[product.id] = product_uom_obj._compute_price(cr, uid,
-                        uom.id, product.list_price, context['uom'])
+                        uom.id, product.list_price or product.product_tmpl_id.list_price, context['uom'])
             else:
-                res[product.id] = product.list_price
-            res[product.id] =  res[product.id] + product.price_extra
+                res[product.id] = product.list_price or product.product_tmpl_id.list_price
+            res[product.id] =  res[product.id] + (0.0 if  product.list_price else product.price_extra) 
 
         return res
 
@@ -919,8 +922,11 @@ class product_product(osv.osv):
             uom = product.uos_id or product.uom_id
             value = product_uom_obj._compute_price(cr, uid,
                     context['uom'], value, uom.id)
-        value =  value - product.price_extra
-        
+        #value =  value - product.price_extra
+        cr.execute("select id from product_product where product_tmpl_id=%s and active=true"%product.product_tmpl_id.id)
+        res = cr.dictfetchall()
+        if len(res) == 1:
+            self.pool.get('product.template').write(cr, uid, [product.product_tmpl_id.id], {'list_price': value}, context=context)
         return product.write({'list_price': value})
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
@@ -993,6 +999,7 @@ class product_product(osv.osv):
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
         'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
+        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price. Set to zero to disable static price list and activate the price based on attributes prices"),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', select=True),
@@ -1157,7 +1164,7 @@ class product_product(osv.osv):
     #
     # Could be overrided for variants matrices prices
     #
-    def price_get(self, cr, uid, ids, ptype='list_price', context=None):
+    def price_get(self, cr, uid, ids, ptype='lst_price', context=None):
         products = self.browse(cr, uid, ids, context=context)
         return self.pool.get("product.template")._price_get(cr, uid, products, ptype=ptype, context=context)
 

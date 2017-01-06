@@ -81,6 +81,8 @@ class account_move_line(osv.osv):
                 period_company_id = fiscalperiod_obj.browse(cr, uid, context['period_from'], context=context).company_id.id
                 first_period = fiscalperiod_obj.search(cr, uid, [('company_id', '=', period_company_id)], order='date_start', limit=1)[0]
                 context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, first_period, context['period_from'])
+            elif context.get('period_from') == context.get('period_to'):
+                context['periods'] = [context.get('period_from')]
             else:
                 context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, context['period_from'], context['period_to'])
         if 'periods_special' in context:
@@ -96,6 +98,8 @@ class account_move_line(osv.osv):
                     first_period = fiscalperiod_obj.browse(cr, uid, period_ids[0], context=context)
                     query_params['date_start'] = first_period.date_start
                     query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s AND date_start <= %(date_start)s AND id NOT IN %(period_ids)s" + periods_special + ")" + where_move_state + where_move_lines_by_date
+            elif not periods_special and len(context.get('periods')) == 1:
+                query = obj + ".state <> 'draft' AND " + obj + ".period_id = %s"%context.get('periods')[0] + where_move_state + where_move_lines_by_date
             else:
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s AND id IN %(period_ids)s" + periods_special + ")" + where_move_state + where_move_lines_by_date
         else:
@@ -114,6 +118,13 @@ class account_move_line(osv.osv):
             child_ids = account_obj._get_children_and_consol(cr, uid, [context['chart_account_id']], context=context)
             query_params['child_ids'] = tuple(child_ids)
             query += ' AND '+obj+'.account_id IN %(child_ids)s'
+
+        if context.get('analytic_account_id'):
+            analytic_context = context.copy()
+            analytic_context['analytic_child_bottom'] = True
+            child_ids = self.pool.get('account.analytic.account')._child_compute(cr, uid, [context['analytic_account_id']], False, [], context=analytic_context)[context['analytic_account_id']]
+            query_params['analytic_account_ids'] = tuple(child_ids+[context.get('analytic_account_id')])
+            query += ' AND ' + obj + '.analytic_account_id IN %(analytic_account_ids)s'
 
         query += company_clause
         return cr.mogrify(query, query_params)
@@ -674,7 +685,8 @@ class account_move_line(osv.osv):
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
     def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False, context=None):
-        context = dict(context or {})
+        if context is None:
+            context = {}
         account_obj = self.pool.get('account.account')
         journal_obj = self.pool.get('account.journal')
         currency_obj = self.pool.get('res.currency')
@@ -906,6 +918,7 @@ class account_move_line(osv.osv):
         company_list = []
         if context is None:
             context = {}
+        company_currency = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
         for line in self.browse(cr, uid, ids, context=context):
             if company_list and not line.company_id.id in company_list:
                 raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
@@ -936,7 +949,7 @@ class account_move_line(osv.osv):
                     total += line.amount_currency
                 else:
                     total += (line.debit or 0.0) - (line.credit or 0.0)
-        if self.pool.get('res.currency').is_zero(cr, uid, currency_id, total):
+        if self.pool.get('res.currency').is_zero(cr, uid, company_currency, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         # marking the lines as reconciled does not change their validity, so there is no need
@@ -971,7 +984,7 @@ class account_move_line(osv.osv):
         for line in unrec_lines:
             if line.state <> 'valid':
                 raise osv.except_osv(_('Error!'),
-                        _('Entry "%s" is not valid !') % line.name)
+                        _('Entry %s "%s" is not valid !') % (line.move_id.name,line.name))
             credit += line['credit']
             debit += line['debit']
             currency += line['amount_currency'] or 0.0
@@ -1004,12 +1017,6 @@ class account_move_line(osv.osv):
 
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
-            # DO NOT FORWARD PORT
-            if not writeoff_acc_id:
-                if writeoff > 0:
-                    writeoff_acc_id = account.company_id.expense_currency_exchange_account_id.id
-                else:
-                    writeoff_acc_id = account.company_id.income_currency_exchange_account_id.id
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))
             if writeoff > 0:
@@ -1063,24 +1070,14 @@ class account_move_line(osv.osv):
                     'amount_currency': amount_currency_writeoff and amount_currency_writeoff or (account.currency_id.id and currency or 0.0)
                 })
             ]
-            # DO NOT FORWARD PORT
-            # In some exceptional situations (partial payment from a bank statement in foreign
-            # currency), a write-off can be introduced at the very last moment due to currency
-            # conversion. We record it on the bank statement account move.
-            if context.get('bs_move_id'):
-                writeoff_move_id = context['bs_move_id']
-                for l in writeoff_lines:
-                    self.create(cr, uid, dict(l[2], move_id=writeoff_move_id), dict(context, novalidate=True))
-                if not move_obj.validate(cr, uid, writeoff_move_id, context=context):
-                    raise osv.except_osv(_('Error!'), _('You cannot validate a non-balanced entry.'))
-            else:
-                writeoff_move_id = move_obj.create(cr, uid, {
-                    'period_id': writeoff_period_id,
-                    'journal_id': writeoff_journal_id,
-                    'date':date,
-                    'state': 'draft',
-                    'line_id': writeoff_lines
-                })
+
+            writeoff_move_id = move_obj.create(cr, uid, {
+                'period_id': writeoff_period_id,
+                'journal_id': writeoff_journal_id,
+                'date':date,
+                'state': 'draft',
+                'line_id': writeoff_lines
+            })
 
             writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
             if account_id == writeoff_acc_id:
@@ -1105,7 +1102,8 @@ class account_move_line(osv.osv):
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
-        context = dict(context or {})
+        if context is None:
+            context = {}
         context = self.convert_to_period(cr, user, context=context)
         if context.get('account_id', False):
             cr.execute('SELECT code FROM account_account WHERE id = %s', (context['account_id'], ))
@@ -1335,6 +1333,8 @@ class account_move_line(osv.osv):
         vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
         vals['period_id'] = vals.get('period_id') or context.get('period_id')
         vals['date'] = vals.get('date') or context.get('date')
+        if 'quantity' in vals and vals['quantity'] and (vals.get('credit',0.0) or vals.get('debit',0.0)):
+            vals['quantity'] = (-1.0 if vals.get('credit',False) else 1.0) * vals['quantity']
         if not move_id:
             if journal.centralisation:
                 #Check for centralisation

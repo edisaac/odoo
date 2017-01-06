@@ -100,7 +100,7 @@ class Report(osv.Model):
 
         :param doc_id: id of the record to translate
         :param model: model of the record to translate
-        :param lang_field': field of the record containing the lang
+        :param lang_field': field of the record containing the lang or None to user's language
         :param template: name of the template to translate into the lang_field
         """
         ctx = context.copy()
@@ -111,7 +111,7 @@ class Report(osv.Model):
             qcontext['o'] = doc
         else:
             # Reach the lang we want to translate the doc into
-            ctx['lang'] = eval('doc.%s' % lang_field, {'doc': doc})
+            ctx['lang'] = lang_field and eval('doc.%s' % lang_field, {'doc': doc}) or self.pool['res.users'].browse(cr, uid, uid).lang
             qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
         return self.pool['ir.ui.view'].render(cr, uid, template, qcontext, context=ctx)
 
@@ -155,6 +155,32 @@ class Report(osv.Model):
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
+    @api.v7
+    def get_xls(self, cr, uid, ids, report_name, data=None, context=None):
+        """This method generates and returns xls version of a report.
+        """
+        # If the report is using a custom model to render its html, we must use it.
+        # Otherwise, fallback on the generic html rendering.
+        try:
+            report_model_name = 'report.%s' % report_name
+            particularreport_obj = self.pool[report_model_name]
+            return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
+        except KeyError:
+            report = self._get_report_from_name(cr, uid, report_name)
+            report_obj = self.pool[report.model]
+            docs = report_obj.browse(cr, uid, ids, context=context)
+            docargs = {
+                'doc_ids': ids,
+                'doc_model': report.model,
+                'docs': docs,
+            }
+            return self.render(cr, uid, [], report.report_name, docargs, context=context)
+
+    @api.v8
+    def get_xls(self, records, report_name, data=None):
+        return self._model.get_xls(self._cr, self._uid, records.ids, report_name,
+                                    data=data, context=self._context)
+
     @api.v7
     def get_html(self, cr, uid, ids, report_name, data=None, context=None):
         """This method generates and returns html version of a report.
@@ -503,7 +529,7 @@ class Report(osv.Model):
         the field report_name.
         """
         report_obj = self.pool['ir.actions.report.xml']
-        qwebtypes = ['qweb-pdf', 'qweb-html']
+        qwebtypes = ['qweb-pdf', 'qweb-html', 'qweb-xls']
         conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
         idreport = report_obj.search(cr, uid, conditions)[0]
         return report_obj.browse(cr, uid, idreport)

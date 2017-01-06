@@ -3,14 +3,13 @@
 # * account_test
 # 
 # Translators:
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-08-24 08:07+0000\n"
-"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
+"PO-Revision-Date: 2016-06-01 09:54+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,19 +24,19 @@ msgid ""
 "                Click to create Accounting Test.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nFaci clic per a crear una prova de comptabilitat.\n</p>\n            "
+msgstr ""
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Proves comptables"
+msgstr ""
 
 #. module: account_test
 #: view:website:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr "Proves de comptabilitat en"
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,active:0
@@ -47,65 +46,65 @@ msgstr "Actiu"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr "Comprovar si les línies de moviment estan compensades i tenen la mateixa data i període"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
 msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
-msgstr "Comprovar si el saldo del nou exercici fiscal obert casa amb el saldo del últim any"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_04
 msgid "Check if the totally reconciled movements are balanced"
-msgstr "Comprovar si els moviments totalment conciliats estan compensats"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr "Comprovar en els extractes bancaris que el saldo de tancament = saldo d'inici + suma de les línies del extracte"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
 msgid "Check that general accounts and partners on account moves are active"
-msgstr "Comprovar que els comptes generals i les empreses als apunts comptables estiguin actius"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr "Comprovar que les factures pagades/conciliades no estan en estat 'Obert'"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr "Comprovar que els apunts comptables conciliats que defineixin comptes a cobrar i a pagar pertanyin a factures conciliades"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr "Comprovar que la factura conciliada per vendes/compres té apunts conciliats pels comptes a cobrar i a pagar"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
 msgid "Check that there's no move for any account with « View » account type"
-msgstr "Comprovar que no hi ha apunts per cap compte amb tipus de  compte « View » "
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Comprovar el saldo : suma del deure = suma del haver"
+msgstr ""
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 msgid "Code Help"
-msgstr "Ajuda del codi"
+msgstr ""
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
@@ -130,7 +129,7 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr "El codi sempre ha d'establir una variable anomenada 'result' amb el resultat de la prova, que pot ser una llista o un diccionari. Si 'result és una llista buida, significa que la prova ha estat satisfactòria. En cas contrari, es tractarà de traduir i imprimir el que hi ha dintre de 'result'.\n\nSi el resultat de la prova és un diccionari, es pot establir una variable anomenada 'column_order' per elegir en quin ordre es volen imprimir el contingut de 'result'.\n\nEn cas de necessitar-les, es poden utilitzar les següents variables al codi:\n* cr: cursor a la base de dades\n* uid: ID de l'usuari actual\n\nEn qualsevol cas, el codi ha de ser sentencies Python legals amb correcta indentació (si fos necessari).\n\nExemple:\nsql = '''SELECT id, name, ref, date\nFROM account_move_line\nWHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n'''\ncr.execute(sql)\nresult=cr.dictfetchall()"
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,create_uid:0
@@ -196,63 +195,63 @@ msgstr "Seqüència"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr "Prova 1 : Balanç general"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
 msgid "Test 2: Opening a fiscal year"
-msgstr "Prova 2 : Obrir un exercici fiscal"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr "Prova 3 : Línies de moviment"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
 msgid "Test 4: Totally reconciled mouvements"
-msgstr "Prova 4 : Moviments totalment conciliats"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr "Prova 5.1 : Línies de comptabilitat a cobrar i a pagar de factures no conciliades"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr "Prova 5.2 : Factures conciliades i comptes a cobrar/a pagar"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr "Prova 6 : Estat de la factura"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
 msgid "Test 7: « View  » account type"
-msgstr "Prova 7: « Veure  » tipus de compte"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 8 : Closing balance on bank statements"
-msgstr "Prova 8 : Saldo de tancament en els extractes bancaris"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_08
 msgid "Test 9 : Accounts and partners on account moves"
-msgstr "Prova 9 : Comptes i empreses en els apunts comptables"
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr "Descripció de la prova"
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,name:0
 msgid "Test Name"
-msgstr "Nom de la prova"
+msgstr ""
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
@@ -264,4 +263,4 @@ msgstr "Test"
 #: code:addons/account_test/report/account_test_report.py:78
 #, python-format
 msgid "The test was passed successfully"
-msgstr "La prova ha estat superada satisfactòriament"
+msgstr ""

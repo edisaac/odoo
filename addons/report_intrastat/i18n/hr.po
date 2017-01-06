@@ -3,15 +3,14 @@
 # * report_intrastat
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-09-29 13:39+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>\n"
+"PO-Revision-Date: 2015-10-20 16:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +92,7 @@ msgstr "Popust (%)"
 #. module: report_intrastat
 #: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Document:"
-msgstr "Dokument:"
+msgstr ""
 
 #. module: report_intrastat
 #: view:website:report_intrastat.report_intrastatinvoice_document
@@ -113,7 +112,7 @@ msgstr "Veljača"
 #. module: report_intrastat
 #: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Fiscal Position:"
-msgstr "Fiskalna pozicija:"
+msgstr ""
 
 #. module: report_intrastat
 #: field:report.intrastat,id:0 field:report.intrastat.code,id:0
@@ -176,7 +175,7 @@ msgstr "Račun"
 #. module: report_intrastat
 #: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Invoice Date:"
-msgstr "Datum računa:"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -236,12 +235,12 @@ msgstr "Pro-forma"
 #. module: report_intrastat
 #: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Partner Ref.:"
-msgstr "Šifra partnera:"
+msgstr ""
 
 #. module: report_intrastat
 #: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Payment Term:"
-msgstr "Uvjet plaćanja:"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
@@ -301,7 +300,7 @@ msgstr "Ukupno"
 #. module: report_intrastat
 #: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Total Without Taxes"
-msgstr "Ukupno bez poreza"
+msgstr ""
 
 #. module: report_intrastat
 #: field:report.intrastat,type:0

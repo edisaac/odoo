@@ -20,7 +20,6 @@
 ##############################################################################
 
 import itertools
-import math
 from lxml import etree
 
 from openerp import models, fields, api, _
@@ -207,7 +206,7 @@ class account_invoice(models.Model):
 
     number = fields.Char(related='move_id.name', store=True, readonly=True, copy=False)
     internal_number = fields.Char(string='Invoice Number', readonly=True,
-        default=False, copy=False,
+        default=False, copy=False, states={'draft': [('readonly', False)]},
         help="Unique number of the invoice, computed automatically when the invoice is created.")
     reference = fields.Char(string='Invoice Reference',
         help="The partner reference of this invoice.")
@@ -431,7 +430,7 @@ class account_invoice(models.Model):
         payment_term_id = False
         fiscal_position = False
         bank_id = False
-
+ 
         if partner_id:
             p = self.env['res.partner'].browse(partner_id)
             rec_account = p.property_account_receivable
@@ -808,20 +807,11 @@ class account_invoice(models.Model):
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
 
-            company_currency = inv.company_id.currency_id
             if not inv.date_invoice:
-                # FORWARD-PORT UP TO SAAS-6
-                if inv.currency_id != company_currency and inv.tax_line:
-                    raise except_orm(
-                        _('Warning!'),
-                        _('No invoice date!'
-                            '\nThe invoice currency is not the same than the company currency.'
-                            ' An invoice date is required to determine the exchange rate to apply. Do not forget to update the taxes!'
-                        )
-                    )
                 inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
             date_invoice = inv.date_invoice
 
+            company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
             iml = inv._get_analytic_lines()
             # check if taxes are all computed
@@ -844,9 +834,6 @@ class account_invoice(models.Model):
                 if (total_fixed + total_percent) > 100:
                     raise except_orm(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
 
-            # Force recomputation of tax_amount, since the rate potentially changed between creation
-            # and validation of the invoice
-            inv._recompute_tax_amount()
             # one move line per tax line
             iml += account_invoice_tax.move_line_get(inv.id)
 
@@ -1229,18 +1216,6 @@ class account_invoice(models.Model):
         return account_invoice.pay_and_reconcile(recs, pay_amount, pay_account_id, period_id, pay_journal_id,
                     writeoff_acc_id, writeoff_period_id, writeoff_journal_id, name=name)
 
-    @api.multi
-    def _recompute_tax_amount(self):
-        for invoice in self:
-            if invoice.currency_id != invoice.company_id.currency_id:
-                for line in invoice.tax_line:
-                    tax_amount = line.amount_change(
-                        line.amount, currency_id=invoice.currency_id.id, company_id=invoice.company_id.id,
-                        date_invoice=invoice.date_invoice
-                    )['value']['tax_amount']
-                    line.write({'tax_amount': tax_amount})
-
-
 class account_invoice_line(models.Model):
     _name = "account.invoice.line"
     _description = "Invoice Line"
@@ -1327,10 +1302,7 @@ class account_invoice_line(models.Model):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='product_id']"):
                 if self._context['type'] in ('in_invoice', 'in_refund'):
-                    # Hack to fix the stable version 8.0 -> saas-12
-                    # purchase_ok will be moved from purchase to product in master #13271
-                    if 'purchase_ok' in  self.env['product.template']._fields:
-                        node.set('domain', "[('purchase_ok', '=', True)]")
+                    node.set('domain', "[('purchase_ok', '=', True)]")
                 else:
                     node.set('domain', "[('sale_ok', '=', True)]")
             res['arch'] = etree.tostring(doc)
@@ -1567,7 +1539,7 @@ class account_invoice_tax(models.Model):
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             amount = currency.compute(amount, company.currency_id, round=False)
-        tax_sign = math.copysign(1, (self.tax_amount * self.amount))
+        tax_sign = (self.tax_amount / self.amount) if self.amount else 1
         return {'value': {'tax_amount': amount * tax_sign}}
 
     @api.v8
@@ -1642,19 +1614,35 @@ class account_invoice_tax(models.Model):
             (invoice_id,)
         )
         for row in self._cr.dictfetchall():
-            if not (row['amount'] or row['tax_code_id'] or row['tax_amount']):
-                continue
-            res.append({
-                'type': 'tax',
-                'name': row['name'],
-                'price_unit': row['amount'],
-                'quantity': 1,
-                'price': row['amount'] or 0.0,
-                'account_id': row['account_id'],
-                'tax_code_id': row['tax_code_id'],
-                'tax_amount': row['tax_amount'],
-                'account_analytic_id': row['account_analytic_id'],
-            })
+            have_tax = have_base = False
+            if row['amount'] and row['tax_code_id'] and row['tax_amount']:
+                have_tax = True
+            if row['base'] and row['base_code_id'] and row['base_amount']:
+                have_base = True
+            if row['manual'] and have_base and not have_tax:
+                res.append({
+                    'type':'tax',
+                    'name':row['name'],
+                    'price_unit': row['amount'],
+                    'quantity': 1,
+                    'price': row['amount'] or 0.0,
+                    'account_id': row['account_id'],
+                    'tax_code_id': row['base_code_id'],
+                    'tax_amount': row['base_amount'],
+                    'account_analytic_id': row['account_analytic_id'],
+                })
+            elif have_tax:
+                res.append({
+                    'type': 'tax',
+                    'name': row['name'],
+                    'price_unit': row['amount'],
+                    'quantity': 1,
+                    'price': row['amount'] or 0.0,
+                    'account_id': row['account_id'],
+                    'tax_code_id': row['tax_code_id'],
+                    'tax_amount': row['tax_amount'],
+                    'account_analytic_id': row['account_analytic_id'],
+                })
         return res
 
 

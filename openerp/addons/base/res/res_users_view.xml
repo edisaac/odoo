@@ -55,6 +55,7 @@
                     <group col="4">
                         <field name="category_id"/>
                         <field name="name"/>
+                        <field name="property"/>
                     </group>
                     <notebook>
                         <page string="Users">
@@ -66,6 +67,9 @@
                         </page>
                         <page string="Menus">
                             <field name="menu_access"/>
+                        </page>
+                        <page string="Hidden Menus">
+                            <field name="menu_hidden"/>
                         </page>
                         <page string="Views">
                             <field name="view_access"/>

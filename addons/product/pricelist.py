@@ -47,7 +47,7 @@ class price_type(osv.osv):
         return res
 
     def _get_field_currency(self, cr, uid, fname, ctx):
-        ids = self.search(cr, uid, [('field','=',fname)], context=ctx)
+        ids = self.search(cr, uid, [('field','=',fname)], context=ctx) or [1]
         return self.browse(cr, uid, ids, context=ctx)[0].currency_id
 
     def _get_currency(self, cr, uid, ctx):
@@ -369,6 +369,10 @@ class product_pricelist(osv.osv):
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
         return dict((key, price[0]) for key, price in self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner, context=context).items())
+    
+    def discount_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
+        rule_obj = self.pool.get('product.pricelist.item')
+        return dict((key, price[1] and rule_obj.browse(cr, uid, price[1], context=context).discount or 0.0) for key, price in self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner, context=context).items())
 
     def price_rule_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
         product = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
@@ -380,14 +384,6 @@ class product_pricelist(osv.osv):
 class product_pricelist_version(osv.osv):
     _name = "product.pricelist.version"
     _description = "Pricelist Version"
-
-    def _get_product_pricelist(self, cr, uid, ids, context=None):
-        result = set()
-        for pricelist in self.pool['product.pricelist'].browse(cr, uid, ids, context=context):
-            for version_id in pricelist.version_id:
-                result.add(version_id.id)
-        return list(result)
-
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Price List',
             required=True, select=True, ondelete='cascade'),
@@ -401,9 +397,7 @@ class product_pricelist_version(osv.osv):
         'date_start': fields.date('Start Date', help="First valid date for the version."),
         'date_end': fields.date('End Date', help="Last valid date for the version."),
         'company_id': fields.related('pricelist_id','company_id',type='many2one',
-            readonly=True, relation='res.company', string='Company', store={
-                'product.pricelist': (_get_product_pricelist, ['company_id'], 20),
-            })
+            readonly=True, relation='res.company', string='Company', store=True)
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -462,7 +456,7 @@ class product_pricelist_item(osv.osv):
         if fields.get('type') == 'purchase':
             product_price_type_ids = product_price_type_obj.search(cr, uid, [('field', '=', 'standard_price')], context=context)
         elif fields.get('type') == 'sale':
-            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context=context)
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','lst_price')], context=context)
         else:
             return -1
         if not product_price_type_ids:
@@ -496,14 +490,6 @@ class product_pricelist_item(osv.osv):
                 return False
         return True
 
-    def _get_product_pricelist(self, cr, uid, ids, context=None):
-        result = set()
-        for pricelist in self.pool['product.pricelist'].browse(cr, uid, ids, context=context):
-            for version_id in pricelist.version_id:
-                for item_id in version_id.items_id:
-                    result.add(item_id.id)
-        return list(result)
-
     _columns = {
         'name': fields.char('Rule Name', help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
@@ -521,7 +507,7 @@ class product_pricelist_item(osv.osv):
 
         'price_surcharge': fields.float('Price Surcharge',
             digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.'),
-        'price_discount': fields.float('Price Discount', digits=(16,4)),
+        'price_discount': fields.float('Price Discount', digits=(16,8)),
         'price_round': fields.float('Price Rounding',
             digits_compute= dp.get_precision('Product Price'),
             help="Sets the price so that it is a multiple of this value.\n" \
@@ -532,10 +518,9 @@ class product_pricelist_item(osv.osv):
             digits_compute= dp.get_precision('Product Price'), help='Specify the minimum amount of margin over the base price.'),
         'price_max_margin': fields.float('Max. Price Margin',
             digits_compute= dp.get_precision('Product Price'), help='Specify the maximum amount of margin over the base price.'),
+        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'company_id': fields.related('price_version_id','company_id',type='many2one',
-            readonly=True, relation='res.company', string='Company', store={
-                'product.pricelist': (_get_product_pricelist, ['company_id'], 30),
-            })
+            readonly=True, relation='res.company', string='Company', store=True)
     }
 
     _constraints = [

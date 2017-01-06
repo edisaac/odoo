@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2016-11-02 05:16+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"PO-Revision-Date: 2016-01-15 04:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +121,7 @@ msgstr "Data alocarii"
 #. module: crm_partner_assign
 #: model:crm.case.stage,name:crm_partner_assign.stage_portal_lead_assigned
 msgid "Assigned"
-msgstr "Alocat"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
@@ -189,7 +189,7 @@ msgstr "Comentariu"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Communication"
-msgstr "Comunicare"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
@@ -200,12 +200,12 @@ msgstr "Companie"
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Confirm"
-msgstr "Confirmă"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Contact"
-msgstr "Contact"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,body:0
@@ -236,7 +236,7 @@ msgstr "Data Crearii"
 #: field:res.partner.activation,create_uid:0
 #: field:res.partner.grade,create_uid:0
 msgid "Created by"
-msgstr "Creat de"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,create_date:0
@@ -245,7 +245,7 @@ msgstr "Creat de"
 #: field:res.partner.activation,create_date:0
 #: field:res.partner.grade,create_date:0
 msgid "Created on"
-msgstr "Creat în"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
@@ -258,7 +258,7 @@ msgstr "Client"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Customer Name"
-msgstr "Nume client"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
@@ -273,7 +273,7 @@ msgstr "Verificarea Datei"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_open:0
 msgid "Delay to Assign"
-msgstr "Întîrzie atribuire"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
@@ -283,7 +283,7 @@ msgstr "Intarziere la inchidere"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Details"
-msgstr "Detalii"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,contacted:0
@@ -305,7 +305,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Email Template"
-msgstr "Șablon email"
+msgstr ""
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:87
@@ -318,7 +318,7 @@ msgstr ""
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
 #, python-format
 msgid "Error!"
-msgstr "Eroare!"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
@@ -328,7 +328,7 @@ msgstr "Promoveaza"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Expected Revenues"
-msgstr "Venituri estimate"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
@@ -434,12 +434,12 @@ msgstr ""
 #: field:crm.partner.report.assign,id:0 field:res.partner.activation,id:0
 #: field:res.partner.grade,id:0
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:res.partner,implemented_partner_ids:0
 msgid "Implementation References"
-msgstr "Referințe implementare"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:res.partner,assigned_partner_id:0
@@ -463,7 +463,7 @@ msgstr "Perioada de facturare"
 #: field:res.partner.activation,write_uid:0
 #: field:res.partner.grade,write_uid:0
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,write_date:0
@@ -472,7 +472,7 @@ msgstr "Ultima actualizare făcută de"
 #: field:res.partner.activation,write_date:0
 #: field:res.partner.grade,write_date:0
 msgid "Last Updated on"
-msgstr "Ultima actualizare în"
+msgstr ""
 
 #. module: crm_partner_assign
 #: help:crm.lead,date_assign:0
@@ -524,12 +524,12 @@ msgstr "Pista/Oportunitate"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_portal_leads
 #: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current
 msgid "Leads"
-msgstr "Piste"
+msgstr ""
 
 #. module: crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.portal_leads
 msgid "Leads & Opportunities"
-msgstr "Piste & oportunități"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
@@ -659,7 +659,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 msgid "Partner Name"
-msgstr "Nume partener"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
@@ -734,7 +734,7 @@ msgstr "Trimite"
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Send Email"
-msgstr "Trimite email"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -811,7 +811,7 @@ msgstr "Utilizator"
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Very High"
-msgstr "Foarte ridicată"
+msgstr ""
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0

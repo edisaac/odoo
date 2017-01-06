@@ -151,6 +151,8 @@ class account_bank_statement(osv.osv):
                                          'Entry lines', states={'confirm':[('readonly',True)]}),
         'state': fields.selection([('draft', 'New'),
                                    ('open','Open'), # used by cash statements
+                                   ('to_approve', 'To Approve'),
+                                   ('approve', 'Approve'),
                                    ('confirm', 'Closed')],
                                    'Status', required=True, readonly="1",
                                    copy=False,
@@ -316,7 +318,7 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def check_status_condition(self, cr, uid, state, journal_type='bank'):
-        return state in ('draft','open')
+        return state in ('draft','open', 'approve')
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
         if context is None:
@@ -437,7 +439,7 @@ class account_bank_statement_line(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for item in self.browse(cr, uid, ids, context=context):
-            if item.journal_entry_id:
+            if item.journal_entry_id and not context.get('bank_voucher_not_raise',False):
                 raise osv.except_osv(
                     _('Invalid Action!'),
                     _('In order to delete a bank statement line, you must first cancel it to delete related journal items.')
@@ -846,6 +848,8 @@ class account_bank_statement_line(osv.osv):
                 mv_line = aml_obj.browse(cr, uid, mv_line_dict['counterpart_move_line_id'], context=context)
                 mv_line_dict['partner_id'] = mv_line.partner_id.id or st_line.partner_id.id
                 mv_line_dict['account_id'] = mv_line.account_id.id
+            elif self.pool['account.account'].browse(cr, uid, mv_line_dict['account_id'], context=context).type in ['receivable','payable']:
+                mv_line_dict['partner_id'] = st_line.partner_id.id
             if st_line_currency.id != company_currency.id:
                 ctx = context.copy()
                 ctx['date'] = st_line.date
@@ -920,8 +924,7 @@ class account_bank_statement_line(osv.osv):
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
-            # DO NOT FORWARD PORT
-            aml_obj.reconcile_partial(cr, uid, pair, context=dict(context, bs_move_id=move_id))
+            aml_obj.reconcile_partial(cr, uid, pair, context=context)
         # Mark the statement line as reconciled
         self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
 
@@ -948,7 +951,7 @@ class account_bank_statement_line(osv.osv):
         'partner_name': fields.char('Partner Name', help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."),
         'ref': fields.char('Reference'),
         'note': fields.text('Notes'),
-        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
+        'sequence': fields.integer('#', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
         'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'journal_entry_id': fields.many2one('account.move', 'Journal Entry', copy=False),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),

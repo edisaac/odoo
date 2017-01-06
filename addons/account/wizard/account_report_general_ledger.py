@@ -49,7 +49,8 @@ class account_report_general_ledger(osv.osv_memory):
         return res
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        context = dict(context or {})
+        if context is None:
+            context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
         if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record

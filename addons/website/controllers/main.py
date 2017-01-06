@@ -84,7 +84,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
-        return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
+        url = request.registry['ir.config_parameter'].get_param(request.cr, openerp.SUPERUSER_ID, 'web.base.url') or request.httprequest.url_root
+        return request.render('website.robots', {'url_root': url+'/'}, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
@@ -93,6 +94,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         iuv = request.registry['ir.ui.view']
         mimetype ='application/xml;charset=utf-8'
         content = None
+        url_root = request.registry['ir.config_parameter'].get_param(request.cr, openerp.SUPERUSER_ID, 'web.base.url')
+        if url_root:
+            url_root = url_root + '/'
+        else:
+            url_root =  request.httprequest.url_root
 
         def create_sitemap(url, content):
             ira.create(cr, uid, dict(
@@ -143,7 +149,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
                     pages=range(1, pages + 1),
-                    url_root=request.httprequest.url_root,
+                    url_root=url_root,
                 ), context=context)
             create_sitemap('/sitemap.xml', content)
 
@@ -356,7 +362,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         url = "http://google.com/complete/search"
         try:
             req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode({
-                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords})))
+                'hl': 'es', 'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords.replace(' ','+')})))
             request = urllib2.urlopen(req)
         except (urllib2.HTTPError, urllib2.URLError):
             return []

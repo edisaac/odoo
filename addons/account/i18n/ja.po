@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-10-13 15:43+0000\n"
+"PO-Revision-Date: 2016-08-07 02:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -575,7 +575,7 @@ msgstr "期間は会計に関連する活動を記録すべき会計エントリ
 #: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "選択された仕訳明細は既に消込済です。"
+msgstr ""
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -2036,7 +2036,7 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr "販売担当者ごと"
+msgstr ""
 
 #. module: account
 #: help:account.fiscal.position,active:0
@@ -2188,7 +2188,7 @@ msgstr ""
 #: code:addons/account/account.py:1550
 #, python-format
 msgid "Cannot create moves for different companies."
-msgstr "異なる会社の口座には、資金移動できません。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_invoice.py:830
@@ -7660,7 +7660,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Pro Forma Invoice"
-msgstr "見積送状"
+msgstr ""
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -11599,7 +11599,7 @@ msgstr "日数"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "e.g. sales@odoo.com"
-msgstr "例: sales@odoo.com"
+msgstr ""
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings

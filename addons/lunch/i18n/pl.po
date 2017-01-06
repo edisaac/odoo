@@ -3,14 +3,13 @@
 # * lunch
 # 
 # Translators:
-# zbik2607 <darek@krokus.com.pl>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-09-22 20:28+0000\n"
+"PO-Revision-Date: 2016-07-07 11:51+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -200,7 +199,7 @@ msgstr "Sierpień"
 #. module: lunch
 #: field:lunch.alert,active_from:0
 msgid "Between"
-msgstr "Pomiędzy"
+msgstr "Między"
 
 #. module: lunch
 #: view:lunch.cashmove:lunch.view_lunch_cashmove_filter
@@ -250,7 +249,7 @@ msgstr "Anulowano"
 #. module: lunch
 #: field:lunch.order.line,cashmove:0
 msgid "Cash Move"
-msgstr "Ruchy pieniężne"
+msgstr "ruchy pieniężne"
 
 #. module: lunch
 #: field:lunch.product,category_id:0 field:lunch.product.category,name:0
@@ -500,7 +499,7 @@ msgstr "Moje zamówienia"
 #. module: lunch
 #: view:website:lunch.report_lunchorder
 msgid "Name/Date"
-msgstr "Nazwa/Data"
+msgstr "nazwa/data"
 
 #. module: lunch
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
@@ -836,7 +835,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_tree
 msgid "Your Orders"
-msgstr "Twoje zamówienia"
+msgstr "Twoje zamówienie"
 
 #. module: lunch
 #: code:addons/lunch/lunch.py:196

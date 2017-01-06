@@ -41,6 +41,7 @@ This module allows you to easily add extra costs on pickings and decide the spli
         'product_view.xml',
         'stock_landed_costs_view.xml',
         'stock_landed_costs_data.xml',
+        "report/picking_cost_report.xml",
     ],
     'test': [
         'test/stock_landed_costs.yml',

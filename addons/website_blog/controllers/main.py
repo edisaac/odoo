@@ -127,11 +127,10 @@ class WebsiteBlog(http.Controller):
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(
-            url=request.httprequest.path.partition('/page/')[0],
+            url=blog_url(),
             total=len(blog_posts),
             page=page,
             step=self._blog_post_per_page,
-            url_args=opt,
         )
         pager_begin = (page - 1) * self._blog_post_per_page
         pager_end = page * self._blog_post_per_page

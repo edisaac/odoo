@@ -4,14 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Håvard Line <071203line@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-10-11 07:58+0000\n"
-"Last-Translator: Håvard Line <071203line@gmail.com>\n"
+"PO-Revision-Date: 2015-10-20 11:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-8/language/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,17 +50,17 @@ msgstr ""
 #. module: sale_layout
 #: field:sale_layout.category,pagebreak:0
 msgid "Add pagebreak"
-msgstr "Legg til sideskift"
+msgstr ""
 
 #. module: sale_layout
 #: field:sale_layout.category,separator:0
 msgid "Add separator"
-msgstr "Legg til skillelinje"
+msgstr ""
 
 #. module: sale_layout
 #: field:sale_layout.category,subtotal:0
 msgid "Add subtotal"
-msgstr "Legg til delsum"
+msgstr ""
 
 #. module: sale_layout
 #: view:website:account.report_invoice_document
@@ -71,7 +70,7 @@ msgstr "Beløp"
 #. module: sale_layout
 #: view:sale_layout.category:sale_layout.report_configuration_search_view
 msgid "Break"
-msgstr "Opphold"
+msgstr ""
 
 #. module: sale_layout
 #: field:sale_layout.category,create_uid:0
@@ -102,7 +101,7 @@ msgstr "Rabatt (%)"
 #. module: sale_layout
 #: view:sale_layout.category:sale_layout.report_configuration_search_view
 msgid "Group By Name"
-msgstr "Grupper etter navn"
+msgstr ""
 
 #. module: sale_layout
 #: field:sale_layout.category,id:0
@@ -133,7 +132,7 @@ msgstr "Sist oppdatert"
 #: field:account.invoice.line,categ_sequence:0
 #: field:sale.order.line,categ_sequence:0
 msgid "Layout Sequence"
-msgstr "Layout rekkefølge"
+msgstr ""
 
 #. module: sale_layout
 #: view:sale_layout.category:sale_layout.report_configuration_search_view
@@ -157,12 +156,12 @@ msgstr "Antall"
 #: view:sale_layout.category:sale_layout.report_configuration_form_view
 #: view:sale_layout.category:sale_layout.report_configuration_tree_view
 msgid "Report Configuration"
-msgstr "Rapportinstillinger"
+msgstr ""
 
 #. module: sale_layout
 #: model:ir.ui.menu,name:sale_layout.Report_configuration
 msgid "Report Layout Categories"
-msgstr "Rapportlayout kategorier"
+msgstr ""
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
@@ -177,7 +176,7 @@ msgstr "Salgsordrelinje"
 #. module: sale_layout
 #: view:sale_layout.category:sale_layout.report_configuration_search_view
 msgid "Search Name"
-msgstr "Søk etter navn"
+msgstr ""
 
 #. module: sale_layout
 #: field:account.invoice.line,sale_layout_cat_id:0
@@ -225,4 +224,4 @@ msgstr "Enhetspris"
 #. module: sale_layout
 #: view:website:account.report_invoice_document
 msgid "Unit of measure"
-msgstr "Enhet"
+msgstr ""

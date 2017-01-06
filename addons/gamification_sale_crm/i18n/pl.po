@@ -3,13 +3,12 @@
 # * gamification_sale_crm
 # 
 # Translators:
-# zbik2607 <darek@krokus.com.pl>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-09-22 20:23+0000\n"
+"PO-Revision-Date: 2016-06-27 09:11+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +25,7 @@ msgstr "Faktury korygujące dla klienta"
 #. module: gamification_sale_crm
 #: model:gamification.goal.definition,name:gamification_sale_crm.definition_crm_lead_delay_close
 msgid "Days to Close a Deal"
-msgstr "Dni do zamknięcia sprawy"
+msgstr "Dni do zamknięcia umowy"
 
 #. module: gamification_sale_crm
 #: model:gamification.challenge,name:gamification_sale_crm.challenge_crm_marketing
@@ -61,7 +60,7 @@ msgstr "Nowe zamówienia sprzedaży"
 #. module: gamification_sale_crm
 #: model:gamification.goal.definition,name:gamification_sale_crm.definition_crm_nbr_paid_sale_order
 msgid "Paid Sales Orders"
-msgstr "Opłać zamówienia"
+msgstr "opłać zamówienie"
 
 #. module: gamification_sale_crm
 #: model:gamification.goal.definition,name:gamification_sale_crm.definition_crm_lead_delay_open
